@@ -5,24 +5,23 @@
     <title>思维宇宙 · 声光流星版</title>
     <style>
         body, html { margin:0; padding:0; overflow:hidden; background:#000; font-family: sans-serif; color:white; user-select: none; }
-        
+       
         /* 寄语容器 */
-        #mottoWrapper { 
-            position: absolute; top: 0; left: 50%; width: 400px; 
-            background: rgba(255,255,255,0.05); padding: 15px 15px 5px 15px; 
-            text-align: center; z-index: 1000; border-radius: 0 0 20px 20px; 
-            backdrop-filter: blur(10px); 
+        #mottoWrapper {
+            position: absolute; top: 0; left: 50%; width: 400px;
+            background: rgba(255,255,255,0.05); padding: 15px 15px 5px 15px;
+            text-align: center; z-index: 1000; border-radius: 0 0 20px 20px;
+            backdrop-filter: blur(10px);
             transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             transform: translateX(-50%) translateY(0);
         }
         #mottoWrapper.hidden {
             transform: translateX(-50%) translateY(calc(-100% + 28px));
         }
-        #toggleMotto { 
+        #toggleMotto {
             cursor: pointer; padding-top: 8px; font-weight: bold; color: #aaa; transition: 0.3s;
         }
         #toggleMotto:hover { color: #fff; }
-
         /* 管理菜单 */
         #adminMenu { position: absolute; top: 20px; left: 20px; z-index: 1100; }
         .menuLabel { background: #111; padding: 10px 20px; border-radius: 20px; border: 1px solid #333; cursor: pointer; transition: 0.3s;}
@@ -33,41 +32,39 @@
         .dropdown button:hover { color: #fff; background: rgba(255,255,255,0.1); border-radius: 5px; }
         .dropdown button:disabled { color: #555; cursor: default; background: none; }
         .divider { height: 1px; background: #333; margin: 5px 0; }
-        
+       
         /* 弹窗样式 */
         .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 25px; border-radius: 15px; display: none; z-index: 2000; border: 1px solid #444; width: 300px; backdrop-filter: blur(10px); }
         .modal h3 { margin-top: 0; color: #fff; }
         .modal input, .modal textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin-bottom: 12px; box-sizing: border-box; border-radius: 8px; font-size: 14px; outline: none; }
         .modal textarea { height: 80px; resize: none; }
         .modal input:focus, .modal textarea:focus { border-color: #00f2fe; }
-        
+       
         .colorPicker { display: flex; gap: 10px; margin: 10px 0 15px 0; }
         .colorDot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; opacity: 0.5; transition: 0.2s; border: 2px solid transparent; }
         .colorDot.active { opacity: 1; border: 2px solid white; transform: scale(1.1); }
-        
+       
         .modalBtns { display: flex; justify-content: space-between; gap: 10px; }
         .modalBtns button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; background: #333; color: white; transition: 0.2s; font-weight: bold; }
         .modalBtns button:hover { background: #444; }
         .modalBtns button.primary { background: #00f2fe; color: #000; }
         .modalBtns button.primary:hover { background: #00d2de; }
-
         /* 底部行星栏 */
         #planetBar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(250%); display: flex; gap: 15px; transition: 0.5s ease-out; z-index: 100; padding: 10px; }
-        
+       
         .planetCardWrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
         .planetCard { background: rgba(15,15,15,0.85); border: 1px solid #333; width: 110px; padding: 18px 8px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); }
         .planetCard:hover { transform: translateY(-8px); border-color: #555; background: rgba(25,25,25,0.9); }
         .planetCardTitle { font-size: 14px; font-weight: bold; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        
-        .deleteBtn { 
-            position: absolute; top: 100%; margin-top: 10px; 
-            background: rgba(255, 77, 79, 0.1); border: 1px solid #ff4d4f; color: #ff4d4f; 
-            font-size: 12px; padding: 5px 12px; border-radius: 15px; cursor: pointer; 
+       
+        .deleteBtn {
+            position: absolute; top: 100%; margin-top: 10px;
+            background: rgba(255, 77, 79, 0.1); border: 1px solid #ff4d4f; color: #ff4d4f;
+            font-size: 12px; padding: 5px 12px; border-radius: 15px; cursor: pointer;
             opacity: 0; visibility: hidden; transition: 0.2s; font-weight: bold;
         }
         .planetCardWrapper:hover .deleteBtn { opacity: 1; visibility: visible; }
         .deleteBtn:hover { background: #ff4d4f; color: #fff; box-shadow: 0 0 10px rgba(255,77,79,0.5); }
-
         /* 内容查看器 */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(20px); }
         #viewerContent { width: 80%; max-width: 700px; text-align: center; }
@@ -76,7 +73,7 @@
         .viewerTextarea { background: none; border: none; color: #ccc; font-size: 18px; width: 100%; height: 350px; line-height: 1.8; text-align: center; resize: none; outline: none; font-family: inherit; }
         .saveBtn { background: #00f2fe; color: #000; font-weight: bold; border: none; padding: 14px 40px; border-radius: 30px; cursor: pointer; margin-top: 30px; font-size: 16px; transition: 0.2s; box-shadow: 0 0 20px rgba(0, 242, 254, 0.2); }
         .saveBtn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 242, 254, 0.5); }
-        
+       
         /* 3D 标签 */
         .label { color: #fff; font-size: 14px; pointer-events: none; text-shadow: 0 0 8px rgba(255,255,255,0.8); background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(2px); font-weight: bold;}
     </style>
@@ -85,12 +82,10 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/renderers/CSS2DRenderer.js"></script>
 </head>
 <body>
-
     <div id="mottoWrapper">
         <div id="mottoDisplay">“每个想法，都是宇宙中的一颗星。”</div>
         <div id="toggleMotto" onclick="window.toggleMotto()">▽</div>
     </div>
-
     <div id="adminMenu">
         <div class="menuLabel">🌌 宇宙中心</div>
         <div class="dropdown">
@@ -101,7 +96,6 @@
             <button onclick="window.resetUniverse()" style="color:#ff4d4f">🧹 清空宇宙数据</button>
         </div>
     </div>
-
     <div class="modal" id="galaxyModal">
         <h3>新建领域</h3>
         <input id="galaxyName" placeholder="例如：生活、工作、灵感...">
@@ -110,7 +104,6 @@
             <button onclick="window.closeModals()">取消</button>
         </div>
     </div>
-
     <div class="modal" id="renameStarModal">
         <h3>修改领域名称</h3>
         <input id="newStarName" placeholder="输入新的名称...">
@@ -119,7 +112,6 @@
             <button onclick="window.closeModals()">取消</button>
         </div>
     </div>
-
     <div class="modal" id="contentModal">
         <h3>发射新灵感行星</h3>
         <input id="planetTitle" placeholder="灵感标题...">
@@ -138,9 +130,7 @@
             <button onclick="window.closeModals()">取消</button>
         </div>
     </div>
-
     <div id="planetBar"></div>
-
     <div id="viewer" onclick="window.closeViewer()">
         <div id="viewerContent" onclick="event.stopPropagation()">
             <input id="editTitle" class="viewerInput">
@@ -148,7 +138,6 @@
             <button class="saveBtn" onclick="window.saveEdit()">保存灵感修改</button>
         </div>
     </div>
-
     <script>
         // 全局变量
         let scene, camera, renderer, labelRenderer, controls;
@@ -157,7 +146,6 @@
         let keys = {};
         let currentPickingColor = "#00f2fe";
         let isAddingSatellite = false;
-
         // ---- 音效系统 ----
         let audioCtx = null;
         function playSpaceSound() {
@@ -167,44 +155,35 @@
                 audioCtx = new AudioContext();
             }
             if (audioCtx.state === 'suspended') audioCtx.resume();
-
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-
             osc.type = 'sine';
-            const baseFreq = 250 + Math.random() * 150; 
+            const baseFreq = 250 + Math.random() * 150;
             osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, audioCtx.currentTime + 0.1);
-            
+           
             gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-
             osc.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-
             osc.start();
             osc.stop(audioCtx.currentTime + 1.5);
         }
-
         // ---- 流星背景系统 ----
         let shootingStars = [];
         const MAX_SHOOTING_STARS = 10;
-
         function initShootingStars() {
             for (let i = 0; i < MAX_SHOOTING_STARS; i++) {
                 createShootingStar();
             }
         }
-
         function createShootingStar() {
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(2 * 3);
             const colors = new Float32Array(2 * 3);
-
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
             const material = new THREE.LineBasicMaterial({
                 vertexColors: true,
                 blending: THREE.AdditiveBlending,
@@ -212,7 +191,6 @@
                 opacity: 0,
                 linewidth: 2
             });
-
             const line = new THREE.Line(geometry, material);
             line.userData = {
                 active: false,
@@ -220,61 +198,49 @@
                 length: 0,
                 direction: new THREE.Vector3()
             };
-
             scene.add(line);
             shootingStars.push(line);
         }
-
         function activateShootingStar(star) {
             const range = 15000;
             const startX = (Math.random() - 0.5) * range * 2;
             const startY = (Math.random() - 0.2) * range;
             const startZ = (Math.random() - 0.5) * range * 2;
-
             const dir = new THREE.Vector3(
                 (Math.random() - 0.5) * 0.5,
                 -1,
                 (Math.random() - 0.5) * 0.5
             ).normalize();
-
             const length = 200 + Math.random() * 300;
             const speed = 100 + Math.random() * 150;
-
             const positions = star.geometry.attributes.position.array;
             positions[0] = startX; positions[1] = startY; positions[2] = startZ;
             positions[3] = startX; positions[4] = startY; positions[5] = startZ;
             star.geometry.attributes.position.needsUpdate = true;
-
             const colors = star.geometry.attributes.color.array;
-            colors[0] = 0.8; colors[1] = 0.9; colors[2] = 1.0; 
-            colors[3] = 0.1; colors[4] = 0.4; colors[5] = 0.8; 
+            colors[0] = 0.8; colors[1] = 0.9; colors[2] = 1.0;
+            colors[3] = 0.1; colors[4] = 0.4; colors[5] = 0.8;
             star.geometry.attributes.color.needsUpdate = true;
-
             star.material.opacity = 0.9;
-
             star.userData.active = true;
             star.userData.speed = speed;
             star.userData.length = length;
             star.userData.direction.copy(dir);
             star.userData.currentLength = 0;
         }
-
         function updateShootingStars() {
             shootingStars.forEach(star => {
                 if (!star.userData.active) {
-                    if (Math.random() < 0.002) { 
+                    if (Math.random() < 0.002) {
                         activateShootingStar(star);
                     }
                     return;
                 }
-
                 const data = star.userData;
                 const positions = star.geometry.attributes.position.array;
-
                 positions[0] += data.direction.x * data.speed;
                 positions[1] += data.direction.y * data.speed;
                 positions[2] += data.direction.z * data.speed;
-
                 if (data.currentLength < data.length) {
                     data.currentLength += data.speed;
                 } else {
@@ -282,45 +248,36 @@
                     positions[4] += data.direction.y * data.speed;
                     positions[5] += data.direction.z * data.speed;
                 }
-
                 star.material.opacity -= 0.005;
                 star.geometry.attributes.position.needsUpdate = true;
-
                 if (star.material.opacity <= 0 || positions[1] < -10000) {
                     star.userData.active = false;
                     star.material.opacity = 0;
                 }
             });
         }
-
         // ---- 初始化与核心逻辑 ----
-
         function init() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x000000);
-
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
             camera.position.set(0, 2000, 4000);
-
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.toneMapping = THREE.ReinhardToneMapping;
             renderer.toneMappingExposure = 1.5;
             document.body.appendChild(renderer.domElement);
-
             labelRenderer = new THREE.CSS2DRenderer();
             labelRenderer.setSize(window.innerWidth, window.innerHeight);
             labelRenderer.domElement.style.position = 'absolute';
             labelRenderer.domElement.style.top = '0';
             labelRenderer.domElement.style.pointerEvents = 'none';
             document.body.appendChild(labelRenderer.domElement);
-
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.minDistance = 500;
             controls.maxDistance = 30000;
-
             const starGeo = new THREE.BufferGeometry();
             const starPos = [];
             for(let i=0; i<15000; i++) {
@@ -329,9 +286,7 @@
             starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
             const starMat = new THREE.PointsMaterial({ size: 15, color: 0xffffff, transparent: true, opacity: 0.7, sizeAttenuation: true });
             scene.add(new THREE.Points(starGeo, starMat));
-
             initShootingStars();
-
             document.querySelectorAll('.colorDot').forEach(dot => {
                 dot.onclick = (e) => {
                     e.stopPropagation();
@@ -340,33 +295,28 @@
                     currentPickingColor = dot.getAttribute('data-color');
                 };
             });
-
             window.addEventListener('resize', onResize);
-
             loadData();
             animate();
         }
-
         function animate() {
             requestAnimationFrame(animate);
-            
+           
             const dir = new THREE.Vector3();
             camera.getWorldDirection(dir);
             dir.y = 0; dir.normalize();
             const side = new THREE.Vector3().crossVectors(camera.up, dir).normalize();
             const moveSpeed = 30;
-            
+           
             if(keys['w']) { camera.position.addScaledVector(dir, moveSpeed); controls.target.addScaledVector(dir, moveSpeed); }
             if(keys['s']) { camera.position.addScaledVector(dir, -moveSpeed); controls.target.addScaledVector(dir, -moveSpeed); }
             if(keys['a']) { camera.position.addScaledVector(side, moveSpeed); controls.target.addScaledVector(side, moveSpeed); }
             if(keys['d']) { camera.position.addScaledVector(side, -moveSpeed); controls.target.addScaledVector(side, -moveSpeed); }
-
             if(targetPosition && selectedSystem) {
                 camera.position.lerp(targetPosition, 0.05);
                 controls.target.lerp(selectedSystem.center, 0.05);
                 if(camera.position.distanceTo(targetPosition) < 10) targetPosition = null;
             }
-
             // 行星公转 + 卫星公转
             systems.forEach(sys => {
                 sys.planets.forEach(p => {
@@ -374,7 +324,6 @@
                     p.position.x = sys.center.x + Math.cos(p.userData.angle) * p.userData.distance;
                     p.position.z = sys.center.z + Math.sin(p.userData.angle) * p.userData.distance;
                     p.position.y = sys.center.y + Math.sin(p.userData.angle * 2) * 10;
-
                     // 卫星公转（围绕当前行星位置）
                     if (p.satellites) {
                         p.satellites.forEach(sat => {
@@ -387,16 +336,12 @@
                     }
                 });
             });
-
             updateShootingStars();
-
             controls.update();
             renderer.render(scene, camera);
             labelRenderer.render(scene, camera);
         }
-
         // ---- UI 交互与数据管理 ----
-
         window.openGalaxyModal = () => document.getElementById('galaxyModal').style.display = 'block';
         window.openAddChild = () => {
             if (!currentFocused) {
@@ -414,28 +359,24 @@
             document.getElementById('textContent').value = '';
             document.getElementById('contentModal').style.display = 'block';
         };
-
         window.openRenameStarModal = () => {
             if (!selectedSystem) return;
             document.getElementById('newStarName').value = selectedSystem.name;
             document.getElementById('renameStarModal').style.display = 'block';
         };
-
         window.closeModals = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         window.closeViewer = () => document.getElementById('viewer').style.display = 'none';
-
         window.toggleMotto = () => {
             const w = document.getElementById('mottoWrapper');
             const btn = document.getElementById('toggleMotto');
             w.classList.toggle('hidden');
             btn.innerText = w.classList.contains('hidden') ? '△' : '▽';
         };
-
         window.createGalaxy = () => {
             const name = document.getElementById('galaxyName').value.trim() || "未知领域";
             const pos = new THREE.Vector3(
-                (Math.random()-0.5) * 10000, 
-                (Math.random()-0.5) * 3000, 
+                (Math.random()-0.5) * 10000,
+                (Math.random()-0.5) * 3000,
                 (Math.random()-0.5) * 10000
             );
             selectedSystem = createGalaxyLogic(name, pos);
@@ -444,7 +385,6 @@
             saveData();
             focusOnSystem(selectedSystem);
         };
-
         function createGalaxyLogic(name, pos, planetsData = []) {
             const star = new THREE.Mesh(
                 new THREE.SphereGeometry(60, 16, 12),
@@ -452,23 +392,20 @@
             );
             star.position.copy(pos);
             scene.add(star);
-
             const div = document.createElement('div');
             div.className = 'label';
             div.textContent = name;
             const label = new THREE.CSS2DObject(div);
             label.position.set(0, 110, 0);
             star.add(label);
-
             const system = { name, star, label, center: pos, planets: [] };
             systems.push(system);
-            
+           
             planetsData.forEach(p => createPlanetLogic(system, p));
-            
+           
             updateStarAppearance(system);
             return system;
         }
-
         window.renameStar = () => {
             if (!selectedSystem) return;
             const newName = document.getElementById('newStarName').value.trim();
@@ -481,29 +418,26 @@
                 window.closeModals();
             }
         };
-
         function updateStarAppearance(system) {
             const count = system.planets.length;
             const scale = 1 + count * 0.1;
             system.star.scale.setScalar(scale);
-            
+           
             let targetColor = 0xffffff;
             if (count >= 1 && count <= 3) targetColor = 0x00f2fe;
             else if (count >= 4 && count <= 7) targetColor = 0x7ed321;
             else if (count >= 8 && count <= 12) targetColor = 0xffcc00;
             else if (count > 12) targetColor = 0xff4d4f;
-            
+           
             system.star.material.color.setHex(targetColor);
             system.label.element.style.borderColor = `#${targetColor.toString(16).padStart(6, '0')}88`;
             system.label.element.style.color = `#${targetColor.toString(16).padStart(6, '0')}`;
         }
-
         function updatePlanetAppearance(planet) {
             const count = planet.satellites.length;
             const scale = 1 + Math.min(count * 0.07, 0.6);
             planet.scale.setScalar(scale);
         }
-
         function createPlanetLogic(system, pData) {
             const userData = {
                 title: pData.title || "未命名灵感",
@@ -520,24 +454,19 @@
             planet.satellites = [];
             planet.userData.parentSystem = system;
             scene.add(planet);
-
             const ringGeo = new THREE.TorusGeometry(30, 1, 2, 30);
             const ringMat = new THREE.MeshBasicMaterial({ color: userData.color, transparent: true, opacity: 0.3 });
             const ring = new THREE.Mesh(ringGeo, ringMat);
             ring.rotation.x = Math.PI / 2;
             planet.add(ring);
-
             system.planets.push(planet);
-
             if (pData.satellites && Array.isArray(pData.satellites)) {
                 pData.satellites.forEach(sData => {
                     createSatelliteLogic(planet, sData);
                 });
             }
-
             updateStarAppearance(system);
         }
-
         function createSatelliteLogic(planet, data) {
             const sat = new THREE.Mesh(
                 new THREE.SphereGeometry(12, 20, 20),
@@ -553,25 +482,20 @@
             sat.userData.parentPlanet = planet;
             planet.satellites.push(sat);
             scene.add(sat);
-
             const ringGeo = new THREE.TorusGeometry(18, 0.8, 2, 30);
             const ringMat = new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.25 });
             const ring = new THREE.Mesh(ringGeo, ringMat);
             ring.rotation.x = Math.PI / 2;
             sat.add(ring);
-
             updatePlanetAppearance(planet);
         }
-
         function showChildrenBar(parent) {
             const bar = document.getElementById('planetBar');
             bar.innerHTML = '';
             currentFocused = parent;
-
             const isStarLevel = !!(parent && parent.planets);
             const children = isStarLevel ? parent.planets : (parent.satellites || []);
             selectedItem = null;
-
             if (isStarLevel) {
                 selectedSystem = parent;
                 document.getElementById('renameStarBtn').disabled = false;
@@ -581,28 +505,29 @@
                 document.getElementById('renameStarBtn').disabled = false;
                 document.getElementById('renameStarBtn').textContent = `✏️ 修改 [${selectedSystem.name}] 名称`;
             }
-
             children.forEach((child, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'planetCardWrapper';
-
                 const card = document.createElement('div');
                 card.className = 'planetCard';
                 card.style.borderTop = `4px solid ${child.userData.color}`;
-                
+               
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'planetCardTitle';
                 titleDiv.innerText = child.userData.title;
                 card.appendChild(titleDiv);
-
                 card.onclick = (e) => {
                     e.stopPropagation();
                     selectedItem = child;
                     document.getElementById('editTitle').value = child.userData.title;
                     document.getElementById('editText').value = child.userData.text;
                     document.getElementById('viewer').style.display = 'flex';
+                    // 新增功能：点击卡片自动聚焦对应行星或卫星（不改变任何原有功能）
+                    playSpaceSound();
+                    const isPlanet = !!child.userData.parentSystem;
+                    const offset = new THREE.Vector3(0, isPlanet ? 400 : 250, isPlanet ? 1200 : 700);
+                    targetPosition = child.position.clone().add(offset);
                 };
-
                 const delBtn = document.createElement('div');
                 delBtn.className = 'deleteBtn';
                 delBtn.innerHTML = '✖ 粉碎灵感';
@@ -613,7 +538,6 @@
                         scene.remove(child);
                         if(child.geometry) child.geometry.dispose();
                         if(child.material) child.material.dispose();
-
                         if (isStarLevel) {
                             parent.planets.splice(index, 1);
                             updateStarAppearance(parent);
@@ -625,26 +549,22 @@
                         showChildrenBar(parent);
                     }
                 };
-
                 wrapper.appendChild(card);
                 wrapper.appendChild(delBtn);
                 bar.appendChild(wrapper);
             });
-
             bar.style.transform = 'translateX(-50%) translateY(0)';
         }
-
         window.addChild = () => {
             const title = document.getElementById('planetTitle').value.trim() || (isAddingSatellite ? "未命名卫星" : "未命名灵感");
             const text = document.getElementById('textContent').value || "";
-            const data = { 
-                title, 
-                text, 
-                color: currentPickingColor, 
+            const data = {
+                title,
+                text,
+                color: currentPickingColor,
                 distance: isAddingSatellite ? (50 + Math.random() * 60) : (300 + Math.random() * 400),
-                angle: Math.random() * Math.PI * 2 
+                angle: Math.random() * Math.PI * 2
             };
-
             if (isAddingSatellite) {
                 createSatelliteLogic(currentFocused, data);
             } else {
@@ -654,12 +574,10 @@
                 }
                 createPlanetLogic(currentFocused, data);
             }
-
             window.closeModals();
             saveData();
             showChildrenBar(currentFocused);
         };
-
         window.saveEdit = () => {
             if(selectedItem) {
                 const newTitle = document.getElementById('editTitle').value.trim() || (selectedItem.userData.parentPlanet ? "未命名卫星" : "未命名灵感");
@@ -670,43 +588,39 @@
                 window.closeViewer();
             }
         };
-
         window.resetUniverse = () => {
             if(confirm("💥 警告：确定要引发宇宙大爆炸，清空所有领域和灵感数据吗？不可逆！")) {
                 localStorage.removeItem('univ_save_data_v3');
                 location.reload();
             }
         };
-
         function focusOnSystem(system) {
             targetPosition = system.center.clone().add(new THREE.Vector3(0, 1500, 2500));
             showChildrenBar(system);
         }
-
         function focusOnPlanet(planet) {
             targetPosition = planet.position.clone().add(new THREE.Vector3(0, 400, 1200));
             showChildrenBar(planet);
         }
-
         window.addEventListener('pointerdown', e => {
             if (e.target.closest('.modal') || e.target.closest('#adminMenu') || e.target.closest('#planetBar') || e.target.closest('#mottoWrapper') || e.target.closest('#viewer')) return;
-            
+           
             const mouse = new THREE.Vector2((e.clientX/window.innerWidth)*2-1, -(e.clientY/window.innerHeight)*2+1);
             const raycaster = new THREE.Raycaster();
             raycaster.setFromCamera(mouse, camera);
-            
+           
             const allClickable = [];
             systems.forEach(s => {
                 allClickable.push(s.star);
                 s.planets.forEach(p => allClickable.push(p));
             });
-            
+           
             const hits = raycaster.intersectObjects(allClickable);
-            
+           
             if(hits.length > 0) {
                 playSpaceSound();
                 const obj = hits[0].object;
-                
+               
                 const hitSystem = systems.find(s => s.star === obj);
                 if (hitSystem) {
                     selectedSystem = hitSystem;
@@ -736,23 +650,20 @@
                 selectedItem = null;
             }
         });
-
         function onResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
             labelRenderer.setSize(window.innerWidth, window.innerHeight);
         }
-        
+       
         window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
         window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-
         const STORAGE_KEY = 'univ_save_data_v3';
-
         function saveData() {
             const data = systems.map(s => ({
-                name: s.name, 
-                center: s.center.toArray(), 
+                name: s.name,
+                center: s.center.toArray(),
                 planets: s.planets.map(planet => ({
                     title: planet.userData.title,
                     text: planet.userData.text,
@@ -770,26 +681,25 @@
             }));
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
-
         function loadData() {
             const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             if (saved.length === 0) {
                 createGalaxyLogic("欢迎使用 · 思维宇宙", new THREE.Vector3(0,0,0), [
                     {
-                        title: "这是一个灵感行星", 
-                        text: "点击恒星查看，点击卡片编辑。", 
-                        color: "#00f2fe", 
-                        distance: 400, 
+                        title: "这是一个灵感行星",
+                        text: "点击恒星查看，点击卡片编辑。",
+                        color: "#00f2fe",
+                        distance: 400,
                         angle: 0,
                         satellites: [
                             {title: "卫星示例", text: "行星下的子灵感，可添加修改删除", color: "#ffcc00", distance: 85, angle: 1.2}
                         ]
                     },
                     {
-                        title: "WASD 键控制移动", 
-                        text: "鼠标滚轮缩放，拖拽旋转。点击行星聚焦卫星栏", 
-                        color: "#ffcc00", 
-                        distance: 600, 
+                        title: "WASD 键控制移动",
+                        text: "鼠标滚轮缩放，拖拽旋转。点击行星聚焦卫星栏",
+                        color: "#ffcc00",
+                        distance: 600,
                         angle: Math.PI / 2,
                         satellites: []
                     }
@@ -798,7 +708,6 @@
                 saved.forEach(s => createGalaxyLogic(s.name, new THREE.Vector3().fromArray(s.center), s.planets));
             }
         }
-
         window.onload = init;
     </script>
 </body>
