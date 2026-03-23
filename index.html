@@ -315,15 +315,22 @@
         };
 
         function clearUniverse() {
-            systems.forEach(sys => {
-                if (sys.star) scene.remove(sys.star);
-                sys.planets.forEach(planet => {
-                    scene.remove(planet);
-                    if (planet.satellites) planet.satellites.forEach(sat => scene.remove(sat));
-                });
-            });
-            systems = [];
+    systems.forEach(sys => {
+        if (sys.star) {
+            scene.remove(sys.star); // 移除 3D 恒星球体
+            
+            // 🌟 新增修复：彻底销毁卡在屏幕上的 2D HTML 标签元素
+            if (sys.label && sys.label.element) {
+                sys.label.element.remove(); 
+            }
         }
+        sys.planets.forEach(planet => {
+            scene.remove(planet);
+            if (planet.satellites) planet.satellites.forEach(sat => scene.remove(sat));
+        });
+    });
+    systems = [];
+}
 
         async function loadFromCloud() {
             if (!currentUser || !firebaseDb) return;
