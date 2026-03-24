@@ -48,7 +48,40 @@
         .modalBtns button.primary:hover { background: #00d2de; }
         
         /* 底部行星栏 */
-        #planetBar { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(250%); display: flex; gap: 15px; transition: 0.5s ease-out; z-index: 100; padding: 10px; }
+        /* 优化底部行星栏，增加滚动支持 */
+#planetBar {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(250%);
+    display: flex;
+    gap: 15px;
+    transition: 0.5s ease-out;
+    z-index: 100;
+    padding: 10px 20px; /* 增加左右内边距 */
+    
+    /* --- 新增代码 --- */
+    max-width: 90vw;      /* 限制容器最大宽度为屏幕宽度的 90% */
+    overflow-x: auto;     /* 内容过多时允许横向滚动 */
+    overflow-y: visible;  /* 确保悬停时的操作按钮不会被裁切 */
+    scrollbar-width: thin; /* Firefox 滚动条美化 */
+}
+
+/* 美化滚动条（针对 Chrome, Edge, Safari） */
+#planetBar::-webkit-scrollbar {
+    height: 6px;
+}
+#planetBar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+#planetBar::-webkit-scrollbar-thumb {
+    background: rgba(0, 242, 254, 0.3);
+    border-radius: 10px;
+}
+#planetBar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 242, 254, 0.6);
+}
         .planetCardWrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
         .planetCard { background: rgba(15,15,15,0.85); border: 1px solid #333; width: 110px; padding: 18px 8px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); }
         .planetCard:hover { transform: translateY(-8px); border-color: #555; background: rgba(25,25,25,0.9); }
@@ -360,6 +393,18 @@
             window.addEventListener('resize', onResize);
             initFirebase();
             animate();
+            // 获取卡片容器
+const bar = document.getElementById('planetBar');
+
+// 阻止鼠标滚轮事件穿透到背景 3D 场景
+bar.addEventListener('wheel', (e) => {
+    e.stopPropagation();
+}, { passive: false });
+
+// 阻止触摸事件穿透（针对移动端）
+bar.addEventListener('touchstart', (e) => {
+    e.stopPropagation();
+}, { passive: false });
         }
 
         function animate() {
