@@ -48,24 +48,22 @@
         .modalBtns button.primary:hover { background: #00d2de; }
         
         /* 底部行星栏 */
-        #planetBar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(250%); display: flex; gap: 15px; transition: 0.5s ease-out; z-index: 100; padding: 10px; }
+        #planetBar { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(250%); display: flex; gap: 15px; transition: 0.5s ease-out; z-index: 100; padding: 10px; }
         .planetCardWrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
-        .planetCard { background: rgba(15,15,15,0.85); border: 1px solid #333; width: 110px; padding: 18px 8px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); z-index: 2; }
+        .planetCard { background: rgba(15,15,15,0.85); border: 1px solid #333; width: 110px; padding: 18px 8px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); }
         .planetCard:hover { transform: translateY(-8px); border-color: #555; background: rgba(25,25,25,0.9); }
         .planetCardTitle { font-size: 14px; font-weight: bold; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
      
-        /* 重构卡片悬浮操作按钮组 */
-        .cardActions { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; margin-top: 5px; opacity: 0; visibility: hidden; transition: 0.2s; z-index: 1; padding-top: 10px;}
+        /* 🌟 新增：独立的操作按钮组 */
+        .cardActions { position: absolute; top: 100%; margin-top: 10px; display: flex; gap: 6px; opacity: 0; visibility: hidden; transition: 0.2s; }
         .planetCardWrapper:hover .cardActions { opacity: 1; visibility: visible; }
-        .actionBtn { background: rgba(15,15,15,0.9); border: 1px solid #555; color: #fff; font-size: 12px; padding: 6px 15px; border-radius: 15px; cursor: pointer; white-space: nowrap; transition: 0.2s; font-weight: bold; }
-        .actionBtn.view { border-color: #ffcc00; color: #ffcc00; }
-        .actionBtn.view:hover { background: #ffcc00; color: #000; box-shadow: 0 0 10px rgba(255,204,0,0.5); }
-        .actionBtn.edit { border-color: #00f2fe; color: #00f2fe; }
-        .actionBtn.edit:hover { background: #00f2fe; color: #000; box-shadow: 0 0 10px rgba(0,242,254,0.5); }
-        .actionBtn.del { border-color: #ff4d4f; color: #ff4d4f; }
-        .actionBtn.del:hover { background: #ff4d4f; color: #fff; box-shadow: 0 0 10px rgba(255,77,79,0.5); }
+        .actionBtn { background: rgba(15,15,15,0.85); border: 1px solid #444; color: #ccc; font-size: 12px; padding: 5px 10px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: bold; white-space: nowrap; }
+        .actionBtn:hover { transform: scale(1.05); }
+        .actionBtn.view:hover { background: rgba(0, 242, 254, 0.1); border-color: #00f2fe; color: #00f2fe; }
+        .actionBtn.edit:hover { background: rgba(255, 204, 0, 0.1); border-color: #ffcc00; color: #ffcc00; }
+        .actionBtn.delete:hover { background: rgba(255, 77, 79, 0.1); border-color: #ff4d4f; color: #ff4d4f; }
         
-        /* 内容查看/编辑大屏 */
+        /* 内容查看器 */
         #viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.97); display: none; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(20px); }
         #viewerContent { width: 80%; max-width: 700px; text-align: center; }
         .viewerInput { background: none; border: none; border-bottom: 2px solid #222; color: #00f2fe; font-size: 32px; width: 100%; text-align: center; margin-bottom: 30px; padding-bottom: 15px; outline: none; font-weight: bold; transition: 0.3s; }
@@ -96,7 +94,7 @@
             <button onclick="window.openGalaxyModal()">✨ 新建领域(恒星)</button>
             <button id="renameStarBtn" onclick="window.openRenameStarModal()" disabled>✏️ 修改领域名称</button>
             <button onclick="window.openAddChild()">➕ 发射灵感(行星/卫星)</button>
-            <button id="moveModeBtn" onclick="window.toggleMoveMode()">🤚 开启宇宙拖拽模式</button>
+            <button id="moveModeBtn" onclick="window.toggleMoveMode()">🤚 开启全宇宙拖拽</button>
             
             <div class="divider"></div>
             <button onclick="window.loginWithGoogle()">🔑 Google 登录 (云端同步)</button>
@@ -131,15 +129,6 @@
         </div>
         <div class="modalBtns"><button class="primary" onclick="window.addChild()">确定发射</button><button onclick="window.closeModals()">取消</button></div>
     </div>
-    
-    <div class="modal" id="viewModal" style="width: 350px;">
-        <h3 id="viewTitle" style="color: #00f2fe; text-align: center; margin-bottom: 15px;"></h3>
-        <div id="viewText" style="color: #ccc; font-size: 14px; line-height: 1.6; white-space: pre-wrap; max-height: 250px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; text-align: left;"></div>
-        <div class="modalBtns">
-            <button class="primary" onclick="window.closeModals()" style="width: 100%;">关闭</button>
-        </div>
-    </div>
-
     <div id="planetBar"></div>
     <div id="viewer" onclick="window.closeViewer()">
         <div id="viewerContent" onclick="event.stopPropagation()">
@@ -169,7 +158,6 @@
         let currentPickingColor = "#00f2fe";
         let isAddingSatellite = false;
         const STORAGE_KEY = 'univ_save_data_v3';
-        
         let isDragMode = false;
         let dragTarget = null;
         let dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
@@ -361,7 +349,6 @@
             const starMat = new THREE.PointsMaterial({ size: 15, color: 0xffffff, transparent: true, opacity: 0.7, sizeAttenuation: true });
             scene.add(new THREE.Points(starGeo, starMat));
             initShootingStars();
-            
             document.querySelectorAll('.colorDot').forEach(dot => {
                 dot.onclick = (e) => {
                     e.stopPropagation();
@@ -382,7 +369,6 @@
             dir.y = 0; dir.normalize();
             const side = new THREE.Vector3().crossVectors(camera.up, dir).normalize();
             const moveSpeed = 30;
-            
             if(keys['w']) { camera.position.addScaledVector(dir, moveSpeed); controls.target.addScaledVector(dir, moveSpeed); }
             if(keys['s']) { camera.position.addScaledVector(dir, -moveSpeed); controls.target.addScaledVector(dir, -moveSpeed); }
             if(keys['a']) { camera.position.addScaledVector(side, moveSpeed); controls.target.addScaledVector(side, moveSpeed); }
@@ -400,6 +386,7 @@
                     p.position.x = sys.center.x + Math.cos(p.userData.angle) * p.userData.distance;
                     p.position.z = sys.center.z + Math.sin(p.userData.angle) * p.userData.distance;
                     p.position.y = sys.center.y + Math.sin(p.userData.angle * 2) * 10;
+                   
                     if (p.satellites) {
                         p.satellites.forEach(sat => {
                             sat.userData.angle += 0.008 * (100 / sat.userData.distance);
@@ -439,16 +426,15 @@
             isDragMode = !isDragMode;
             const btn = document.getElementById('moveModeBtn');
             btn.style.color = isDragMode ? '#00f2fe' : '#ccc';
-            btn.innerText = isDragMode ? '✋ 关闭拖拽模式 (恢复视角旋转)' : '🤚 开启宇宙拖拽模式';
-            controls.enabled = !isDragMode; 
+            btn.innerText = isDragMode ? '✋ 关闭拖拽模式 (恢复视角旋转)' : '🤚 开启全宇宙拖拽';
+            controls.enabled = !isDragMode;
         };
-
+        
         window.openRenameStarModal = () => {
             if (!selectedSystem) return;
             document.getElementById('newStarName').value = selectedSystem.name;
             document.getElementById('renameStarModal').style.display = 'block';
         };
-        
         window.closeModals = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
         window.closeViewer = () => document.getElementById('viewer').style.display = 'none';
         window.toggleMotto = () => {
@@ -493,18 +479,19 @@
                 saveData(); window.closeModals();
             } else { window.closeModals(); }
         };
-
+        
         function updateStarAppearance(system) {
             const count = system.planets.length;
             const scale = 1 + count * 0.25;
             system.star.scale.setScalar(scale);
-            system.star.material.opacity = Math.min(0.5 + count * 0.1, 1.0); 
+            system.star.material.opacity = Math.min(0.5 + count * 0.1, 1.0);
 
             let targetColor = 0xffffff;
             if (count >= 1 && count <= 3) targetColor = 0x00f2fe;
             else if (count >= 4 && count <= 7) targetColor = 0x7ed321;
             else if (count >= 8 && count <= 12) targetColor = 0xffcc00;
             else if (count > 12) targetColor = 0xff4d4f;
+            
             system.star.material.color.setHex(targetColor);
             system.label.element.style.borderColor = `#${targetColor.toString(16).padStart(6, '0')}88`;
             system.label.element.style.color = `#${targetColor.toString(16).padStart(6, '0')}`;
@@ -586,45 +573,39 @@
             children.forEach((child, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'planetCardWrapper';
+                
                 const card = document.createElement('div');
                 card.className = 'planetCard'; card.style.borderTop = `4px solid ${child.userData.color}`;
                 const titleDiv = document.createElement('div'); titleDiv.className = 'planetCardTitle';
                 titleDiv.innerText = child.userData.title;
                 card.appendChild(titleDiv);
                 
-                // 卡片本体点击聚焦
-                card.onclick = (e) => {
+                // 🌟 新增：独立的三大功能按钮组合
+                const actions = document.createElement('div');
+                actions.className = 'cardActions';
+                
+                // 👁 查看按钮
+                const viewBtn = document.createElement('div');
+                viewBtn.className = 'actionBtn view';
+                viewBtn.innerHTML = '👁 查看';
+                viewBtn.onclick = (e) => {
                     e.stopPropagation();
                     if (isStarLevel) {
                         playSpaceSound(); focusOnPlanet(child);
                     } else {
                         playSpaceSound();
-                        const isPlanet = !!child.userData.parentSystem;
-                        const offset = new THREE.Vector3(0, isPlanet ? 400 : 250, isPlanet ? 1200 : 700);
+                        const offset = new THREE.Vector3(0, 250, 700);
                         targetPosition = child.position.clone().add(offset);
                     }
                 };
-
-                // 操作按钮容器
-                const actions = document.createElement('div');
-                actions.className = 'cardActions';
                 
-                // 查看按钮
-                const viewBtn = document.createElement('div');
-                viewBtn.className = 'actionBtn view'; viewBtn.innerHTML = '👁️ 查看';
-                viewBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    document.getElementById('viewTitle').innerText = child.userData.title;
-                    document.getElementById('viewText').innerText = child.userData.text || "这里什么内容都没有留下...";
-                    document.getElementById('viewModal').style.display = 'block';
-                };
-                actions.appendChild(viewBtn);
-                
-                // 编辑按钮
+                // ✏️ 编辑按钮
                 const editBtn = document.createElement('div');
-                editBtn.className = 'actionBtn edit'; editBtn.innerHTML = '✏️ 编辑';
+                editBtn.className = 'actionBtn edit';
+                editBtn.innerHTML = '✏️ 编辑';
                 editBtn.onclick = (e) => {
-                    e.stopPropagation(); selectedItem = child;
+                    e.stopPropagation();
+                    selectedItem = child;
                     document.getElementById('editTitle').value = child.userData.title;
                     document.getElementById('editText').value = child.userData.text;
                     document.getElementById('viewer').style.display = 'flex';
@@ -633,27 +614,33 @@
                     const offset = new THREE.Vector3(0, isPlanet ? 400 : 250, isPlanet ? 1200 : 700);
                     targetPosition = child.position.clone().add(offset);
                 };
-                actions.appendChild(editBtn);
-
-                // 粉碎按钮
+                
+                // ✖ 删除按钮
                 const delBtn = document.createElement('div');
-                delBtn.className = 'actionBtn del'; delBtn.innerHTML = '✖ 粉碎';
+                delBtn.className = 'actionBtn delete';
+                delBtn.innerHTML = '✖ 删除';
                 delBtn.onclick = (e) => {
                     e.stopPropagation();
                     const itemName = child.userData.title;
-                    if(confirm(`确定要彻底粉碎${isStarLevel ? '灵感' : '卫星'} [${itemName}] 吗？不可恢复。`)) {
+                    if(confirm(`确定要彻底粉碎这个${isStarLevel ? '灵感' : '卫星'} [${itemName}] 吗？不可恢复。`)) {
                         scene.remove(child);
                         if(child.geometry) child.geometry.dispose(); if(child.material) child.material.dispose();
                         if (isStarLevel) {
-                            parent.planets.splice(index, 1); updateStarAppearance(parent);
+                            parent.planets.splice(index, 1);
+                            updateStarAppearance(parent);
                         } else {
-                            parent.satellites.splice(index, 1); updatePlanetAppearance(parent);
+                            parent.satellites.splice(index, 1);
+                            updatePlanetAppearance(parent);
                         }
-                        saveData(); showChildrenBar(parent);
+                        saveData();
+                        showChildrenBar(parent);
                     }
                 };
-                actions.appendChild(delBtn);
 
+                actions.appendChild(viewBtn);
+                actions.appendChild(editBtn);
+                actions.appendChild(delBtn);
+                
                 wrapper.appendChild(card);
                 wrapper.appendChild(actions);
                 bar.appendChild(wrapper);
@@ -665,6 +652,7 @@
             const title = document.getElementById('planetTitle').value.trim() || (isAddingSatellite ? "未命名卫星" : "未命名灵感");
             const text = document.getElementById('textContent').value || "";
             let newOrbitDistance;
+            
             if (isAddingSatellite) {
                 const existingSats = currentFocused.satellites ? currentFocused.satellites.length : 0;
                 newOrbitDistance = 60 + existingSats * 45;
@@ -679,6 +667,7 @@
                 distance: newOrbitDistance, 
                 angle: Math.random() * Math.PI * 2
             };
+            
             if (isAddingSatellite) {
                 createSatelliteLogic(currentFocused, data);
             } else {
@@ -720,7 +709,7 @@
             showChildrenBar(planet);
         }
 
-        // 🌟 核心：拖动行星与恒星的实现
+        // 🌟 更新：处理拖拽过程，支持全层级拖拽
         window.addEventListener('pointermove', e => {
             if(!isDragMode || !dragTarget) return;
             const mouse = new THREE.Vector2((e.clientX/window.innerWidth)*2-1, -(e.clientY/window.innerHeight)*2+1);
@@ -730,36 +719,32 @@
             const intersect = new THREE.Vector3();
             raycaster.ray.intersectPlane(dragPlane, intersect);
             if(intersect) {
-                if (dragTarget.type === 'system') {
-                    // 移动恒星
-                    dragTarget.obj.center.copy(intersect);
-                    dragTarget.obj.star.position.copy(intersect);
-                } else if (dragTarget.type === 'planet') {
-                    // 移动行星，重新计算它围绕母恒星的轨道和角度
-                    const sysCenter = dragTarget.obj.userData.parentSystem.center;
+                if(dragTarget.type === 'system') {
+                    dragTarget.item.center.copy(intersect);
+                    dragTarget.item.star.position.copy(intersect);
+                } else if(dragTarget.type === 'planet') {
+                    const sysCenter = dragTarget.item.userData.parentSystem.center;
                     const dx = intersect.x - sysCenter.x;
                     const dz = intersect.z - sysCenter.z;
-                    // 限制最小轨道距离防止贴图重叠
-                    dragTarget.obj.userData.distance = Math.max(60, Math.sqrt(dx*dx + dz*dz));
-                    dragTarget.obj.userData.angle = Math.atan2(dz, dx);
-                } else if (dragTarget.type === 'satellite') {
-                    // 移动卫星
-                    const pCenter = dragTarget.obj.userData.parentPlanet.position;
-                    const dx = intersect.x - pCenter.x;
-                    const dz = intersect.z - pCenter.z;
-                    dragTarget.obj.userData.distance = Math.max(25, Math.sqrt(dx*dx + dz*dz));
-                    dragTarget.obj.userData.angle = Math.atan2(dz, dx);
+                    dragTarget.item.userData.distance = Math.sqrt(dx*dx + dz*dz);
+                    dragTarget.item.userData.angle = Math.atan2(dz, dx);
+                } else if(dragTarget.type === 'satellite') {
+                    const planetCenter = dragTarget.item.userData.parentPlanet.position;
+                    const dx = intersect.x - planetCenter.x;
+                    const dz = intersect.z - planetCenter.z;
+                    dragTarget.item.userData.distance = Math.sqrt(dx*dx + dz*dz);
+                    dragTarget.item.userData.angle = Math.atan2(dz, dx);
                 }
             }
         });
-
+        
         window.addEventListener('pointerup', () => {
             if(dragTarget) {
-                saveData(); // 拖拽结束时自动同步并保存数据
+                saveData();
                 dragTarget = null;
             }
         });
-
+        
         window.addEventListener('pointerdown', e => {
             if (e.target.closest('.modal') || e.target.closest('#adminMenu') || e.target.closest('#planetBar') || e.target.closest('#mottoWrapper') || e.target.closest('#viewer')) return;
          
@@ -767,12 +752,13 @@
             const raycaster = new THREE.Raycaster();
             raycaster.setFromCamera(mouse, camera);
          
+            // 获取所有可交互物体，包括恒星、行星、卫星
             const allClickable = [];
             systems.forEach(s => {
                 allClickable.push(s.star);
                 s.planets.forEach(p => {
                     allClickable.push(p);
-                    p.satellites.forEach(sat => allClickable.push(sat));
+                    if(p.satellites) p.satellites.forEach(sat => allClickable.push(sat));
                 });
             });
          
@@ -781,37 +767,36 @@
             if(hits.length > 0) {
                 const obj = hits[0].object;
                 
-                // 递归查找点中的具体是恒星、行星还是卫星
-                let hitSystem = systems.find(s => s.star === obj);
+                let hitSystem = null;
                 let hitPlanet = null;
-                let hitSat = null;
+                let hitSatellite = null;
                 
-                if (!hitSystem) {
-                    for (let sys of systems) {
-                        hitPlanet = sys.planets.find(p => p === obj);
-                        if (hitPlanet) break;
-                        for (let p of sys.planets) {
-                            hitSat = p.satellites.find(s => s === obj);
-                            if (hitSat) break;
+                for (let sys of systems) {
+                    if (sys.star === obj) hitSystem = sys;
+                    for (let p of sys.planets) {
+                        if (p === obj) hitPlanet = p;
+                        if (p.satellites) {
+                            for (let s of p.satellites) {
+                                if (s === obj) hitSatellite = s;
+                            }
                         }
-                        if (hitSat) break;
                     }
                 }
                 
-                // 处于拖动模式时，拦截事件进入拖拽计算
+                // 🌟 新增：多级拖拽判断
                 if(isDragMode) {
-                    if (hitSystem) {
-                        dragTarget = { type: 'system', obj: hitSystem };
+                    if(hitSystem) {
+                        dragTarget = { type: 'system', item: hitSystem };
                         const normal = camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-1).normalize();
                         dragPlane.setFromNormalAndCoplanarPoint(normal, hitSystem.center);
-                    } else if (hitPlanet) {
-                        dragTarget = { type: 'planet', obj: hitPlanet };
+                    } else if(hitPlanet) {
+                        dragTarget = { type: 'planet', item: hitPlanet };
                         const normal = camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-1).normalize();
                         dragPlane.setFromNormalAndCoplanarPoint(normal, hitPlanet.position);
-                    } else if (hitSat) {
-                        dragTarget = { type: 'satellite', obj: hitSat };
+                    } else if(hitSatellite) {
+                        dragTarget = { type: 'satellite', item: hitSatellite };
                         const normal = camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-1).normalize();
-                        dragPlane.setFromNormalAndCoplanarPoint(normal, hitSat.position);
+                        dragPlane.setFromNormalAndCoplanarPoint(normal, hitSatellite.position);
                     }
                     return; 
                 }
@@ -827,12 +812,12 @@
                     currentFocused = hitPlanet;
                     selectedItem = null;
                     focusOnPlanet(hitPlanet);
-                } else if (hitSat) {
-                    // 如果点中卫星，退回到所属行星系进行聚焦
-                    selectedSystem = hitSat.userData.parentPlanet.userData.parentSystem;
-                    currentFocused = hitSat.userData.parentPlanet;
+                } else if (hitSatellite) {
+                    selectedSystem = hitSatellite.userData.parentPlanet.userData.parentSystem;
+                    currentFocused = hitSatellite.userData.parentPlanet;
                     selectedItem = null;
-                    focusOnPlanet(hitSat.userData.parentPlanet);
+                    const offset = new THREE.Vector3(0, 250, 700);
+                    targetPosition = hitSatellite.position.clone().add(offset);
                 }
             } else {
                 const bar = document.getElementById('planetBar');
@@ -889,7 +874,7 @@
             systems = [];
             if (saved.length === 0) {
                 createGalaxyLogic("欢迎使用 · 思维宇宙", new THREE.Vector3(0,0,0), [
-                    { title: "这是一个灵感行星", text: "点击恒星查看，点击卡片上的【查看】或【编辑】了解详细内容。", color: "#00f2fe", distance: 400, angle: 0, satellites: [{title: "卫星示例", text: "行星下的子灵感，可添加修改删除", color: "#ffcc00", distance: 85, angle: 1.2}] },
+                    { title: "这是一个灵感行星", text: "点击恒星查看，点击卡片编辑。", color: "#00f2fe", distance: 400, angle: 0, satellites: [{title: "卫星示例", text: "行星下的子灵感，可添加修改删除", color: "#ffcc00", distance: 85, angle: 1.2}] },
                     { title: "WASD 键控制移动", text: "鼠标滚轮缩放，拖拽旋转。点击行星聚焦卫星栏", color: "#ffcc00", distance: 600, angle: Math.PI / 2, satellites: [] }
                 ]);
             } else {
