@@ -48,46 +48,14 @@
         .modalBtns button.primary:hover { background: #00d2de; }
         
         /* 底部行星栏 */
-        /* 优化底部行星栏，增加滚动支持 */
-#planetBar {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%) translateY(250%);
-    display: flex;
-    gap: 15px;
-    transition: 0.5s ease-out;
-    z-index: 100;
-    padding: 10px 20px; /* 增加左右内边距 */
-    
-    /* --- 新增代码 --- */
-    max-width: 90vw;      /* 限制容器最大宽度为屏幕宽度的 90% */
-    overflow-x: auto;     /* 内容过多时允许横向滚动 */
-    overflow-y: visible;  /* 确保悬停时的操作按钮不会被裁切 */
-    scrollbar-width: thin; /* Firefox 滚动条美化 */
-}
-
-/* 美化滚动条（针对 Chrome, Edge, Safari） */
-#planetBar::-webkit-scrollbar {
-    height: 6px;
-}
-#planetBar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-#planetBar::-webkit-scrollbar-thumb {
-    background: rgba(0, 242, 254, 0.3);
-    border-radius: 10px;
-}
-#planetBar::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 242, 254, 0.6);
-}
-        .planetCardWrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
+        #planetBar { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(250%); display: flex; gap: 15px; transition: 0.5s ease-out; z-index: 100; padding: 10px; }
+        /* 增加 flex-shrink: 0 防止滚动时卡片被压缩 */
+        .planetCardWrapper { position: relative; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
         .planetCard { background: rgba(15,15,15,0.85); border: 1px solid #333; width: 110px; padding: 18px 8px; text-align: center; border-radius: 12px; cursor: pointer; transition: 0.3s; backdrop-filter: blur(8px); }
         .planetCard:hover { transform: translateY(-8px); border-color: #555; background: rgba(25,25,25,0.9); }
         .planetCardTitle { font-size: 14px; font-weight: bold; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
      
-        /* 🌟 新增：独立的操作按钮组 */
+        /* 🌟 独立的操作按钮组 */
         .cardActions { position: absolute; top: 100%; margin-top: 10px; display: flex; gap: 6px; opacity: 0; visibility: hidden; transition: 0.2s; }
         .planetCardWrapper:hover .cardActions { opacity: 1; visibility: visible; }
         .actionBtn { background: rgba(15,15,15,0.85); border: 1px solid #444; color: #ccc; font-size: 12px; padding: 5px 10px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: bold; white-space: nowrap; }
@@ -107,6 +75,10 @@
      
         /* 3D 标签 */
         .label { color: #fff; font-size: 14px; pointer-events: none; text-shadow: 0 0 8px rgba(255,255,255,0.8); background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(2px); font-weight: bold;}
+        
+        /* 隐藏底部滚动容器原生滚动条，但保留滑动功能 */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
@@ -307,6 +279,7 @@
             try { await firebaseAuth.signInWithPopup(provider); } catch (error) { alert('登录失败：' + error.message); }
         };
         window.logout = () => { if (firebaseAuth) firebaseAuth.signOut().then(() => location.reload()); };
+        
         function clearUniverse() {
             systems.forEach(sys => {
                 if (sys.star) {
@@ -393,18 +366,6 @@
             window.addEventListener('resize', onResize);
             initFirebase();
             animate();
-            // 获取卡片容器
-const bar = document.getElementById('planetBar');
-
-// 阻止鼠标滚轮事件穿透到背景 3D 场景
-bar.addEventListener('wheel', (e) => {
-    e.stopPropagation();
-}, { passive: false });
-
-// 阻止触摸事件穿透（针对移动端）
-bar.addEventListener('touchstart', (e) => {
-    e.stopPropagation();
-}, { passive: false });
         }
 
         function animate() {
@@ -530,13 +491,11 @@ bar.addEventListener('touchstart', (e) => {
             const scale = 1 + count * 0.25;
             system.star.scale.setScalar(scale);
             system.star.material.opacity = Math.min(0.5 + count * 0.1, 1.0);
-
             let targetColor = 0xffffff;
             if (count >= 1 && count <= 3) targetColor = 0x00f2fe;
             else if (count >= 4 && count <= 7) targetColor = 0x7ed321;
             else if (count >= 8 && count <= 12) targetColor = 0xffcc00;
             else if (count > 12) targetColor = 0xff4d4f;
-            
             system.star.material.color.setHex(targetColor);
             system.label.element.style.borderColor = `#${targetColor.toString(16).padStart(6, '0')}88`;
             system.label.element.style.color = `#${targetColor.toString(16).padStart(6, '0')}`;
@@ -615,6 +574,26 @@ bar.addEventListener('touchstart', (e) => {
                 bar.appendChild(backBtn);
             }
             
+            // 🌟 核心修改点：加入了一个独立承载可滚动特性的内部层 scrollArea
+            const scrollArea = document.createElement('div');
+            scrollArea.className = 'hide-scrollbar';
+            scrollArea.style.display = 'flex';
+            scrollArea.style.gap = '15px';
+            scrollArea.style.maxWidth = '90vw';
+            scrollArea.style.overflowX = 'auto';
+            // 添加 paddingBottom 结合负 Margin，防止卡片下的悬浮按钮被 overflow 意外切掉，也不改变视觉定位
+            scrollArea.style.paddingBottom = '45px'; 
+            scrollArea.style.marginBottom = '-45px'; 
+            
+            // 🌟 加入滚轮左右滚动监听
+            scrollArea.addEventListener('wheel', function(e) {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    e.stopPropagation(); // 阻止滚动冒泡，这样就不会同时缩放背后的宇宙视角
+                    this.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+
             children.forEach((child, index) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'planetCardWrapper';
@@ -625,7 +604,7 @@ bar.addEventListener('touchstart', (e) => {
                 titleDiv.innerText = child.userData.title;
                 card.appendChild(titleDiv);
                 
-                // 🌟 新增：独立的三大功能按钮组合
+                // 独立的三大功能按钮组合
                 const actions = document.createElement('div');
                 actions.className = 'cardActions';
                 
@@ -636,14 +615,15 @@ bar.addEventListener('touchstart', (e) => {
                 viewBtn.onclick = (e) => {
                     e.stopPropagation();
                     if (isStarLevel) {
-                        playSpaceSound(); focusOnPlanet(child);
+                        playSpaceSound();
+                        focusOnPlanet(child);
                     } else {
                         playSpaceSound();
                         const offset = new THREE.Vector3(0, 250, 700);
                         targetPosition = child.position.clone().add(offset);
                     }
                 };
-                
+
                 // ✏️ 编辑按钮
                 const editBtn = document.createElement('div');
                 editBtn.className = 'actionBtn edit';
@@ -659,7 +639,7 @@ bar.addEventListener('touchstart', (e) => {
                     const offset = new THREE.Vector3(0, isPlanet ? 400 : 250, isPlanet ? 1200 : 700);
                     targetPosition = child.position.clone().add(offset);
                 };
-                
+
                 // ✖ 删除按钮
                 const delBtn = document.createElement('div');
                 delBtn.className = 'actionBtn delete';
@@ -688,8 +668,13 @@ bar.addEventListener('touchstart', (e) => {
                 
                 wrapper.appendChild(card);
                 wrapper.appendChild(actions);
-                bar.appendChild(wrapper);
+                
+                // 将卡片加入内部的滚动容器
+                scrollArea.appendChild(wrapper);
             });
+            
+            // 将内部滚动容器附加到原来的容器上
+            bar.appendChild(scrollArea);
             bar.style.transform = 'translateX(-50%) translateY(0)';
         }
         
@@ -697,7 +682,6 @@ bar.addEventListener('touchstart', (e) => {
             const title = document.getElementById('planetTitle').value.trim() || (isAddingSatellite ? "未命名卫星" : "未命名灵感");
             const text = document.getElementById('textContent').value || "";
             let newOrbitDistance;
-            
             if (isAddingSatellite) {
                 const existingSats = currentFocused.satellites ? currentFocused.satellites.length : 0;
                 newOrbitDistance = 60 + existingSats * 45;
@@ -712,7 +696,6 @@ bar.addEventListener('touchstart', (e) => {
                 distance: newOrbitDistance, 
                 angle: Math.random() * Math.PI * 2
             };
-            
             if (isAddingSatellite) {
                 createSatelliteLogic(currentFocused, data);
             } else {
@@ -724,7 +707,7 @@ bar.addEventListener('touchstart', (e) => {
             }
             window.closeModals(); saveData(); showChildrenBar(currentFocused);
         };
-        
+
         window.saveEdit = () => {
             if(selectedItem) {
                 const newTitle = document.getElementById('editTitle').value.trim() || (selectedItem.userData.parentPlanet ? "未命名卫星" : "未命名灵感");
@@ -754,7 +737,6 @@ bar.addEventListener('touchstart', (e) => {
             showChildrenBar(planet);
         }
 
-        // 🌟 更新：处理拖拽过程，支持全层级拖拽
         window.addEventListener('pointermove', e => {
             if(!isDragMode || !dragTarget) return;
             const mouse = new THREE.Vector2((e.clientX/window.innerWidth)*2-1, -(e.clientY/window.innerHeight)*2+1);
@@ -797,7 +779,6 @@ bar.addEventListener('touchstart', (e) => {
             const raycaster = new THREE.Raycaster();
             raycaster.setFromCamera(mouse, camera);
          
-            // 获取所有可交互物体，包括恒星、行星、卫星
             const allClickable = [];
             systems.forEach(s => {
                 allClickable.push(s.star);
@@ -811,11 +792,9 @@ bar.addEventListener('touchstart', (e) => {
    
             if(hits.length > 0) {
                 const obj = hits[0].object;
-                
                 let hitSystem = null;
                 let hitPlanet = null;
                 let hitSatellite = null;
-                
                 for (let sys of systems) {
                     if (sys.star === obj) hitSystem = sys;
                     for (let p of sys.planets) {
@@ -828,7 +807,6 @@ bar.addEventListener('touchstart', (e) => {
                     }
                 }
                 
-                // 🌟 新增：多级拖拽判断
                 if(isDragMode) {
                     if(hitSystem) {
                         dragTarget = { type: 'system', item: hitSystem };
@@ -843,7 +821,7 @@ bar.addEventListener('touchstart', (e) => {
                         const normal = camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(-1).normalize();
                         dragPlane.setFromNormalAndCoplanarPoint(normal, hitSatellite.position);
                     }
-                    return; 
+                    return;
                 }
 
                 playSpaceSound();
